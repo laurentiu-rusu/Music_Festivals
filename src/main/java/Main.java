@@ -16,8 +16,6 @@ public class Main {
     public static void main(String[] args) {
         RepositoryTicket ticket = getRepositoryTicket();
 
-        ticket.delete(2);
-
         System.out.println(ticket.findOne(1));
     }
 

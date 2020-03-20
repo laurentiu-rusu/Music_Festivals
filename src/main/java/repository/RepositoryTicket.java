@@ -11,29 +11,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepositoryTicket implements ICrudRepository<Integer, Ticket> {
+public class RepositoryTicket implements ICrudRepositoryTicket<Integer, Ticket> {
     private JDBUtils dbUtils;
     private static final Logger logger = LogManager.getLogger();
 
     public RepositoryTicket() {
         this.dbUtils = new JDBUtils();
-    }
-
-    @Override
-    public int size() {
-        try {
-            PreparedStatement ps;
-            ps = dbUtils.getConnection().prepareStatement("select count(*) from ticket");
-            ps.execute();
-            ResultSet resultSet = ps.getResultSet();
-            logger.traceExit("Size of the table returned");
-            return resultSet.getInt(1);
-        }catch (SQLException err){
-            logger.error("Error DB: " + err);
-            err.printStackTrace();
-        }
-        logger.traceExit();
-        return 0;
     }
 
     @Override
@@ -53,45 +36,6 @@ public class RepositoryTicket implements ICrudRepository<Integer, Ticket> {
             System.out.println("Error DB: " + e);
         }
         logger.traceExit();
-    }
-
-    @Override
-    public void delete(Integer integer) {
-        Connection con = dbUtils.getConnection();
-        try(PreparedStatement preparedStatement = con.prepareStatement("delete from ticket where id = ?")){
-            preparedStatement.setInt(1, integer);
-            int result = preparedStatement.executeUpdate();
-//            con.close();
-            logger.traceExit("Ticket deleted!");
-        }
-        catch (SQLException e) {
-            logger.error(e);
-            System.out.println("Error DB: " + e);
-        }
-        logger.traceExit();
-    }
-
-    @Override
-    public void update(Integer integer, Ticket entity) {
-        Connection con = dbUtils.getConnection();
-        try(PreparedStatement preparedStatement = con.prepareStatement(
-                "UPDATE ticket SET id = ?, id_concert = ?, buyer_name = ?, number_seats = ? WHERE id = ?"
-        )){
-            preparedStatement.setInt(1, entity.getId());
-            preparedStatement.setInt(2, entity.getIdConcert());
-            preparedStatement.setString(3, entity.getBuyerName());
-            preparedStatement.setInt(4, entity.getNumberTickets());
-            int result = preparedStatement.executeUpdate();
-            if(result == 0)
-                logger.traceExit("Ticket not found!");
-            else
-                logger.traceExit("Ticket updated");
-//            con.close();
-        }
-        catch (SQLException e){
-            logger.error(e);
-            System.out.println("Error DB: " + e);
-        }
     }
 
     @Override

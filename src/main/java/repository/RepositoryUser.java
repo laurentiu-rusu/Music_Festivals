@@ -9,7 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class RepositoryUser {
+public class RepositoryUser implements ICrudRepositoryUser<Integer, User> {
     private JDBUtils dbUtils;
     private static final Logger logger = LogManager.getLogger();
 
