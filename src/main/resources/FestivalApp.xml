@@ -10,10 +10,14 @@
 
     <util:properties id="jdbcProps" location="classpath:db.properties"/>
 
-    <bean id="repoT" class="repository.RepositoryTicket"/>
+    <bean id="repoT" class="repositories.RepositoryTicket"/>
 
-    <bean id="repoU" class="repository.RepositoryUser"/>
+    <bean id="repoU" class="repositories.RepositoryUser"/>
 
-    <bean id="repoC" class="repository.RepositoryConcert"/>
+    <bean id="repoC" class="repositories.RepositoryConcert"/>
+
+    <bean id="serviceU" class="services.ServiceUser">
+        <constructor-arg ref="repoU"/>
+    </bean>
 
 </beans>
