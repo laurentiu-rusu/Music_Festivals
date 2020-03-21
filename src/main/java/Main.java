@@ -6,6 +6,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import services.ServiceConcert;
 import services.ServiceUser;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class Main extends Application {
         AnchorPane root = loader.load();
 
         ControllerLogin ctrl = loader.getController();
-        ctrl.setServices(getServiceUser());
+        ctrl.setServices(getServiceUser(), getServiceConcert());
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
@@ -31,9 +32,13 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    static ServiceUser getServiceUser(){
+    private static ServiceUser getServiceUser(){
         ApplicationContext context = new ClassPathXmlApplicationContext("FestivalApp.xml");
-        ServiceUser serviceUser = context.getBean(ServiceUser.class);
-        return serviceUser;
+        return context.getBean(ServiceUser.class);
+    }
+
+    private static ServiceConcert getServiceConcert(){
+        ApplicationContext context = new ClassPathXmlApplicationContext("FestivalApp.xml");
+        return context.getBean(ServiceConcert.class);
     }
 }

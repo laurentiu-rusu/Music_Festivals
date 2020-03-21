@@ -1,17 +1,22 @@
 package domains;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class Concert {
     private int id;
     private String name;
-    private String date;
+    private LocalDate date;
+    private LocalTime time;
     private String place;
     private int emptySeats;
     private int takenSeats;
 
-    public Concert(int id, String name, String date, String place, int emptySeats, int takenSeats) {
+    public Concert(int id, String name, LocalDate date, LocalTime time, String place, int emptySeats, int takenSeats) {
         this.id = id;
         this.name = name;
         this.date = date;
+        this.time = time;
         this.place = place;
         this.emptySeats = emptySeats;
         this.takenSeats = takenSeats;
@@ -25,8 +30,12 @@ public class Concert {
         return name;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
+    }
+
+    public LocalTime getTime() {
+        return time;
     }
 
     public String getPlace() {
@@ -47,6 +56,7 @@ public class Concert {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", date=" + date +
+                ", time=" + time +
                 ", place='" + place + '\'' +
                 ", emptySeats=" + emptySeats +
                 ", takenSeats=" + takenSeats +

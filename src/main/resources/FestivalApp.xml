@@ -20,4 +20,8 @@
         <constructor-arg ref="repoU"/>
     </bean>
 
+    <bean id="serviceC" class="services.ServiceConcert">
+        <constructor-arg ref="repoC"/>
+    </bean>
+
 </beans>
