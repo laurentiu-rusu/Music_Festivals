@@ -10,35 +10,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RepositoryTicket implements ICrudRepositoryTicket<Integer, Ticket> {
-    private JDBUtils dbUtils;
     private static final Logger logger = LogManager.getLogger();
 
-    public RepositoryTicket() {
-        this.dbUtils = new JDBUtils();
-    }
+    public RepositoryTicket() {}
 
     @Override
     public void save(Ticket entity) {
-        Connection con = dbUtils.getConnection();
+        Connection con = JDBUtils.getConnection();
         try(PreparedStatement preparedStatement = con.prepareStatement("insert into ticket values (?, ?, ?, ?)")){
             preparedStatement.setInt(1, entity.getId());
             preparedStatement.setInt(2, entity.getIdConcert());
             preparedStatement.setString(3, entity.getBuyerName());
             preparedStatement.setInt(4, entity.getNumberTickets());
             int result = preparedStatement.executeUpdate();
-//            con.close();
             logger.traceExit("Ticket save into DB!");
         }
         catch (SQLException e) {
             logger.error(e);
             System.out.println("Error DB: " + e);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         logger.traceExit();
     }
 
     @Override
     public Ticket findOne(Integer integer) {
-        Connection con = dbUtils.getConnection();
+        Connection con = JDBUtils.getConnection();
         try(PreparedStatement preparedStatement = con.prepareStatement("select * from ticket where id = ?")){
             preparedStatement.setInt(1, integer);
             try(ResultSet result = preparedStatement.executeQuery()){
@@ -51,21 +53,26 @@ public class RepositoryTicket implements ICrudRepositoryTicket<Integer, Ticket> 
                     logger.traceExit("Ticket found!");
                     return ticket;
                 }
-//                con.close();
             }
         }
         catch (SQLException e) {
             logger.error(e);
             System.out.println("Error DB: " + e);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         logger.traceExit("No ticket found with this id: " + integer);
         return null;
     }
 
     @Override
-    public Iterable<Ticket> findAll() {
+    public List<Ticket> findAll() {
         List<Ticket> all = new ArrayList<>();
-        Connection conn = dbUtils.getConnection();
+        Connection conn = JDBUtils.getConnection();
         try (PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM ticket")) {
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 while (rs.next()) {
@@ -76,12 +83,17 @@ public class RepositoryTicket implements ICrudRepositoryTicket<Integer, Ticket> 
                     Ticket ticket = new Ticket(id, idConcert, buyerName, number_seats);
                     all.add(ticket);
                 }
-//                conn.close();
             }
         }
         catch (SQLException e) {
             logger.error(e);
             System.out.println("Error DB: " + e);
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         logger.traceExit(all);
         return all;

@@ -9,12 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class RepositoryUser implements ICrudRepositoryUser<String> {
-    private JDBUtils dbUtils;
     private static final Logger logger = LogManager.getLogger();
 
-    public RepositoryUser() {
-        dbUtils = new JDBUtils();
-    }
+    public RepositoryUser() {}
 
     @Override
     public boolean SearchForUser(String username, String password) {
@@ -22,7 +19,7 @@ public class RepositoryUser implements ICrudRepositoryUser<String> {
         if (username != null  && password != null ) {
             try {
                 PreparedStatement ps;
-                ps = dbUtils.getConnection().prepareStatement(
+                ps = JDBUtils.getConnection().prepareStatement(
                         "select * from user where username = ? and password = ?");
                 ps.setString(1, username);
                 ps.setString(2, password);

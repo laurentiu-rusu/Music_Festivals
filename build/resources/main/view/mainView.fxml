@@ -38,7 +38,7 @@
       <Label layoutX="450.0" layoutY="127.0" text="Date" />
       <DatePicker fx:id="calendar" layoutX="486.0" layoutY="122.0" prefHeight="27.0" prefWidth="283.0" />
       <Button layoutX="23.0" layoutY="468.0" mnemonicParsing="false"  prefHeight="27.0" prefWidth="396.0"
-              text="Buy tickets" />
+              text="Buy tickets" onAction="#sellAction"/>
       <Button layoutX="449.0" layoutY="160.0" mnemonicParsing="false"  prefHeight="27.0" prefWidth="320.0"
               text="Search" onAction="#searchAction"/>
       <Label layoutX="346.0" layoutY="14.0" text="Festivals">

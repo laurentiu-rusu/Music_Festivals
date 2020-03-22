@@ -24,4 +24,8 @@
         <constructor-arg ref="repoC"/>
     </bean>
 
+    <bean id="serviceT" class="services.ServiceTicket">
+        <constructor-arg ref="repoT"/>
+    </bean>
+
 </beans>

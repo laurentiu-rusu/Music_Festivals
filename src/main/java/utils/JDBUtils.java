@@ -1,3 +1,4 @@
+
 package utils;
 
 import java.sql.Connection;
@@ -5,8 +6,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class JDBUtils {
-    private  Connection instance=null;
-    private Connection getNewConnection() {
+    private static Connection instance;
+//    private  Connection instance = null;
+    private static Connection getNewConnection() {
         String jdbc = ApplicationContext.getPROPERTIES().getProperty("db.jdbc");
         Connection con = null;
         try{
@@ -18,7 +20,7 @@ public class JDBUtils {
         }
         return con;
     }
-    public Connection getConnection(){
+    public static Connection getConnection(){
         try{
             if(instance == null || instance.isClosed())
                 instance = getNewConnection();

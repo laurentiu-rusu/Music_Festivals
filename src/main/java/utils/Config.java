@@ -7,10 +7,10 @@ import java.util.Properties;
 
 public class Config {
 
-    public static String CONFIG_LOCATION= Objects.requireNonNull(Config.class.getClassLoader()
+    public static String CONFIG_LOCATION = Objects.requireNonNull(Config.class.getClassLoader()
             .getResource("db.properties")).getFile();
     public static Properties getProperties() {
-        Properties properties=new Properties();
+        Properties properties = new Properties();
         try {
             properties.load(new FileReader(CONFIG_LOCATION));
             return properties;

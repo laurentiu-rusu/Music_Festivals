@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import services.ServiceConcert;
+import services.ServiceTicket;
 import services.ServiceUser;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.io.IOException;
 public class ControllerLogin {
     private ServiceUser serviceUser;
     private ServiceConcert serviceConcert;
+    private ServiceTicket serviceTicket;
 
     @FXML
     TextField usernameField;
@@ -23,9 +25,10 @@ public class ControllerLogin {
     @FXML
     PasswordField passwordField;
 
-    public void setServices(ServiceUser serviceUser, ServiceConcert serviceConcert) {
+    public void setServices(ServiceUser serviceUser, ServiceConcert serviceConcert, ServiceTicket serviceTicket) {
         this.serviceUser = serviceUser;
         this.serviceConcert = serviceConcert;
+        this.serviceTicket = serviceTicket;
     }
 
     @FXML
@@ -41,7 +44,7 @@ public class ControllerLogin {
                 AnchorPane root = loader.load();
 
                 ControllerMainApp ctrl = loader.getController();
-                ctrl.setService(serviceConcert);
+                ctrl.setService(serviceConcert, serviceTicket);
 
                 Scene scene = new Scene(root);
                 Stage stage = new Stage();

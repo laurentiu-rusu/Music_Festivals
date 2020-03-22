@@ -12,7 +12,7 @@ public class Concert {
     private int emptySeats;
     private int takenSeats;
 
-    public Concert(int id, String name, LocalDate date, LocalTime time, String place, int emptySeats, int takenSeats) {
+    public Concert(int id, String name, LocalDate date, LocalTime time, String place, int takenSeats, int emptySeats) {
         this.id = id;
         this.name = name;
         this.date = date;

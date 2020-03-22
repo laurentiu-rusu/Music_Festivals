@@ -7,15 +7,18 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import services.ServiceConcert;
+import services.ServiceTicket;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ControllerMainApp {
-    ObservableList<Concert> modelGrade = FXCollections.observableArrayList();
-    ObservableList<Concert> artists = FXCollections.observableArrayList();
-    ServiceConcert serviceConcert;
+    private ObservableList<Concert> modelGrade = FXCollections.observableArrayList();
+    private ObservableList<Concert> artists = FXCollections.observableArrayList();
+    private ServiceConcert serviceConcert;
+    private ServiceTicket serviceTicket;
 
     @FXML
     TableView showsTable;
@@ -52,8 +55,9 @@ public class ControllerMainApp {
     @FXML
     DatePicker calendar;
 
-    public void setService(ServiceConcert serviceConcert) {
+    public void setService(ServiceConcert serviceConcert, ServiceTicket serviceTicket) {
         this.serviceConcert = serviceConcert;
+        this.serviceTicket = serviceTicket;
         calendar.setValue(LocalDate.now());
         modelGrade.setAll(serviceConcert.findAll());
     }
@@ -100,6 +104,37 @@ public class ControllerMainApp {
         aEmptyColumn.setCellValueFactory(new PropertyValueFactory<Concert, Integer>("emptySeats"));
         aHourColumn.setCellValueFactory(new PropertyValueFactory<Concert,String>("time"));
         artistTable.setItems(artists);
+    }
+
+    public void sellAction(){
+        if (showsTable.getSelectionModel().isEmpty()) {
+            MessageAlert.showMessage(null, Alert.AlertType.INFORMATION, "Warning",
+                    "You have to choose a concert!");
+        } else {
+            Concert selectedConcert = (Concert) showsTable.getSelectionModel().getSelectedItem();
+
+            try {
+                int wantedSeats = Integer.parseInt(wantedSeatsField.getText());
+                if (wantedSeats > selectedConcert.getEmptySeats())
+                    MessageAlert.showMessage(null, Alert.AlertType.INFORMATION, "Warning",
+                            "There are not so many empty seats!");
+                else {
+                    Concert concert = serviceConcert.findOne(selectedConcert.getId());
+                    serviceConcert.update(concert.getId(), concert.getName(), concert.getDate(), concert.getTime(),
+                            concert.getPlace(), concert.getTakenSeats(),
+                            concert.getEmptySeats() - wantedSeats);
+                    serviceTicket.save(buyerNameField.getText(), Integer.parseInt(wantedSeatsField.getText()),
+                            concert.getId());
+                    modelGrade.setAll(serviceConcert.findAll());
+                    wantedSeatsField.clear();
+                    buyerNameField.clear();
+                }
+            } catch (NumberFormatException e) {
+                MessageAlert.showMessage(null, Alert.AlertType.INFORMATION, "Warning",
+                        "Couldn't sell the tickets!");
+            }
+        }
+        showsTable.getSelectionModel().clearSelection();
     }
 
 }
