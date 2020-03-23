@@ -18,6 +18,7 @@ public class ControllerLogin {
     private ServiceUser serviceUser;
     private ServiceConcert serviceConcert;
     private ServiceTicket serviceTicket;
+    private Stage loginStage;
 
     @FXML
     TextField usernameField;
@@ -25,7 +26,8 @@ public class ControllerLogin {
     @FXML
     PasswordField passwordField;
 
-    public void setServices(ServiceUser serviceUser, ServiceConcert serviceConcert, ServiceTicket serviceTicket) {
+    public void setServices(Stage loginStage, ServiceUser serviceUser, ServiceConcert serviceConcert, ServiceTicket serviceTicket) {
+        this.loginStage = loginStage;
         this.serviceUser = serviceUser;
         this.serviceConcert = serviceConcert;
         this.serviceTicket = serviceTicket;
@@ -39,16 +41,17 @@ public class ControllerLogin {
             String password = passwordField.getText();
 
             if (serviceUser.checkLoginInfo(username, password)) {
+                loginStage.close();
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getResource("/view/mainView.fxml"));
                 AnchorPane root = loader.load();
 
-                ControllerMainApp ctrl = loader.getController();
-                ctrl.setService(serviceConcert, serviceTicket);
-
                 Scene scene = new Scene(root);
                 Stage stage = new Stage();
+                ControllerMainApp ctrl = loader.getController();
+                ctrl.setService(stage, serviceConcert, serviceTicket, serviceUser);
                 stage.setScene(scene);
+                stage.setTitle("Main");
                 stage.show();
             } else {
                 MessageAlert.showMessage(null, Alert.AlertType.INFORMATION, "Wrong data!",

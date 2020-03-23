@@ -4,11 +4,17 @@ import domains.Concert;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import services.ServiceConcert;
 import services.ServiceTicket;
+import services.ServiceUser;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +25,8 @@ public class ControllerMainApp {
     private ObservableList<Concert> artists = FXCollections.observableArrayList();
     private ServiceConcert serviceConcert;
     private ServiceTicket serviceTicket;
+    private ServiceUser serviceUser;
+    private Stage mainStage;
 
     @FXML
     TableView showsTable;
@@ -55,9 +63,11 @@ public class ControllerMainApp {
     @FXML
     DatePicker calendar;
 
-    public void setService(ServiceConcert serviceConcert, ServiceTicket serviceTicket) {
+    public void setService(Stage mainStage, ServiceConcert serviceConcert, ServiceTicket serviceTicket, ServiceUser serviceUser) {
+        this.mainStage = mainStage;
         this.serviceConcert = serviceConcert;
         this.serviceTicket = serviceTicket;
+        this.serviceUser = serviceUser;
         calendar.setValue(LocalDate.now());
         modelGrade.setAll(serviceConcert.findAll());
     }
@@ -135,6 +145,20 @@ public class ControllerMainApp {
             }
         }
         showsTable.getSelectionModel().clearSelection();
+    }
+
+    public void logout() throws IOException {
+        mainStage.close();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/view/loginView.fxml"));
+        AnchorPane root = loader.load();
+        ControllerLogin ctrl = loader.getController();
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        ctrl.setServices(stage, serviceUser, serviceConcert, serviceTicket);
+        stage.setScene(scene);
+        stage.setTitle("Login");
+        stage.show();
     }
 
 }

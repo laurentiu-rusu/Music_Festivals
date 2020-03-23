@@ -25,11 +25,11 @@ public class Main extends Application {
         AnchorPane root = loader.load();
 
         ControllerLogin ctrl = loader.getController();
-        ctrl.setServices(getServiceUser(), getServiceConcert(), getServiceTicket());
+        ctrl.setServices(primaryStage, getServiceUser(), getServiceConcert(), getServiceTicket());
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("");
+        primaryStage.setTitle("Login");
         primaryStage.show();
     }
 
