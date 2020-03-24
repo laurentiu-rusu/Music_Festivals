@@ -131,7 +131,7 @@ public class ControllerMainApp {
                 else {
                     Concert concert = serviceConcert.findOne(selectedConcert.getId());
                     serviceConcert.update(concert.getId(), concert.getName(), concert.getDate(), concert.getTime(),
-                            concert.getPlace(), concert.getTakenSeats(),
+                            concert.getPlace(), concert.getTakenSeats() + wantedSeats,
                             concert.getEmptySeats() - wantedSeats);
                     serviceTicket.save(buyerNameField.getText(), Integer.parseInt(wantedSeatsField.getText()),
                             concert.getId());
