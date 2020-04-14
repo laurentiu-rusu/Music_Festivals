@@ -1,8 +1,6 @@
 package persistance;
 
 import domains.Ticket;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import utils.JDBUtils;
 
 import java.sql.*;
@@ -10,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RepositoryTicket implements ICrudRepositoryTicket<Integer, Ticket> {
-    private static final Logger logger = LogManager.getLogger();
-
     public RepositoryTicket() {}
 
     @Override
@@ -23,10 +19,8 @@ public class RepositoryTicket implements ICrudRepositoryTicket<Integer, Ticket> 
             preparedStatement.setString(3, entity.getBuyerName());
             preparedStatement.setInt(4, entity.getNumberTickets());
             int result = preparedStatement.executeUpdate();
-            logger.traceExit("Ticket save into DB!");
         }
         catch (SQLException e) {
-            logger.error(e);
             System.out.println("Error DB: " + e);
         } finally {
             try {
@@ -35,7 +29,6 @@ public class RepositoryTicket implements ICrudRepositoryTicket<Integer, Ticket> 
                 e.printStackTrace();
             }
         }
-        logger.traceExit();
     }
 
     @Override
@@ -50,13 +43,11 @@ public class RepositoryTicket implements ICrudRepositoryTicket<Integer, Ticket> 
                     String buyerName = result.getString("buyer_name");
                     Integer number_seats = result.getInt("number_seats");
                     Ticket ticket = new Ticket(id, idConcert, buyerName, number_seats);
-                    logger.traceExit("Ticket found!");
                     return ticket;
                 }
             }
         }
         catch (SQLException e) {
-            logger.error(e);
             System.out.println("Error DB: " + e);
         } finally {
             try {
@@ -65,7 +56,6 @@ public class RepositoryTicket implements ICrudRepositoryTicket<Integer, Ticket> 
                 e.printStackTrace();
             }
         }
-        logger.traceExit("No ticket found with this id: " + integer);
         return null;
     }
 
@@ -86,7 +76,6 @@ public class RepositoryTicket implements ICrudRepositoryTicket<Integer, Ticket> 
             }
         }
         catch (SQLException e) {
-            logger.error(e);
             System.out.println("Error DB: " + e);
         } finally {
             try {
@@ -95,7 +84,6 @@ public class RepositoryTicket implements ICrudRepositoryTicket<Integer, Ticket> 
                 e.printStackTrace();
             }
         }
-        logger.traceExit(all);
         return all;
     }
 }

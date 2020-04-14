@@ -37,21 +37,6 @@ public class ControllerLogin {
     private ControllerMainApp appController;
     Stage mainStage;
 
-    public void setService(Stage loginStage, Stage mainStage, IService service, ControllerMainApp appController) {
-        this.loginStage = loginStage;
-        this.service = service;
-        this.mainStage = mainStage;
-        this.appController = appController;
-        final BooleanProperty firstTime = new SimpleBooleanProperty(true);
-        pane = new AnchorPane();
-        usernameField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue && firstTime.get()) {
-                pane.requestFocus(); // Delegate the focus to container
-                firstTime.setValue(false); // Variable value changed for future references
-            }
-        });
-    }
-
     @FXML
     public void signInAction() throws IOException {
         eroare = new Alert(Alert.AlertType.ERROR);
@@ -62,16 +47,17 @@ public class ControllerLogin {
             String password = passwordField.getText();
 
             try {
+                System.out.println("username: " + username);
+                System.out.println("password: " + password);
                 service.login(new User(0, username, password), appController);
-                System.out.println("login succes");
+                System.out.println("login success");
                 user = usernameField.getText();
                 loginStage.close();
+                System.out.println("Hola");
                 appController.set( mainStage,service,this);
                 appController.setTable();
                 mainStage.setTitle("Meniu");
                 mainStage.show();
-
-
             } catch (PersistanceException ex) {
                 ex.printStackTrace();
                 eroare.setContentText("Date gresite! Username sau parola incorecte!");
@@ -93,5 +79,12 @@ public class ControllerLogin {
         usernameField.clear();
         passwordField.clear();
         pane.requestFocus();
+    }
+
+    public void setAppService(Stage loginStage, Stage mainStage, IService service1, ControllerMainApp appController){
+        this.service = service1;
+        this.appController = appController;
+        this.loginStage = loginStage;
+        this.mainStage = mainStage;
     }
 }

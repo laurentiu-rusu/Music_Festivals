@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <bean id="repositoryConcert" class="persistance.RepositoryConcert"/>
+    <bean id="repositoryTicket" class="persistance.RepositoryTicket"/>
+    <bean id="repositoryUser" class="persistance.RepositoryUser"/>
+    <bean id="Services" class="server.Service">
+        <constructor-arg ref="repositoryConcert"/>
+        <constructor-arg ref="repositoryTicket"/>
+        <constructor-arg ref="repositoryUser"/>
+    </bean>
+
+
+    <bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+
+        <property name="serviceName" value="Servs"/>
+        <property name="service" ref="Services"/>
+        <property name="serviceInterface" value="service.IService"/>
+        <property name="servicePort" value="1099"/>
+    </bean>
+
+
+
+</beans>

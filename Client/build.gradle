@@ -3,7 +3,7 @@ plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version "0.0.8"
 }
-
+mainClassName='StartClient'
 group 'MPP'
 version '1.0-SNAPSHOT'
 
@@ -20,7 +20,15 @@ javafx {
 
 dependencies {
     compile project (':Model')
+    compile project(':Persistance')
     compile project (':Services')
-    compile project (':Networking')
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'org.springframework:spring-context:5.0.4.RELEASE'
 }
+
+jar {
+    manifest { attributes('Main-Class':'StartClient')
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    } }

@@ -1,8 +1,6 @@
 package persistance;
 
 import domains.Concert;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import utils.JDBUtils;
 
 import java.sql.*;
@@ -12,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RepositoryConcert implements ICrudRepositoryConcert<Integer, Concert> {
-    private static final Logger logger = LogManager.getLogger();
-
     public RepositoryConcert() { }
 
     @Override
@@ -33,13 +29,8 @@ public class RepositoryConcert implements ICrudRepositoryConcert<Integer, Concer
             preparedStatement.setInt(8, entity.getId());
             int result = preparedStatement.executeUpdate();
             System.out.println();
-            if(result == 0)
-                logger.traceExit("Concert not found!");
-            else
-                logger.traceExit("Concert updated!");
         }
         catch (SQLException e){
-            logger.error(e);
             System.out.println("Error DB: " + e);
         } finally {
             try {
@@ -65,13 +56,11 @@ public class RepositoryConcert implements ICrudRepositoryConcert<Integer, Concer
                     Integer empty_seats = result.getInt("empty_seats");
                     LocalTime time = LocalTime.parse(result.getString("time"));
                     Concert concert = new Concert(id, name, date, time, place, taken_places, empty_seats);
-                    logger.traceExit("Concert found!");
                     return concert;
                 }
             }
         }
         catch (SQLException e) {
-            logger.error(e);
             System.out.println("Error DB: " + e);
         } finally {
             try {
@@ -80,7 +69,6 @@ public class RepositoryConcert implements ICrudRepositoryConcert<Integer, Concer
                 e.printStackTrace();
             }
         }
-        logger.traceExit("No concert found with this id: " + integer);
         return null;
     }
 
@@ -103,7 +91,6 @@ public class RepositoryConcert implements ICrudRepositoryConcert<Integer, Concer
             }
         }
         catch (SQLException e) {
-            logger.error(e);
             System.out.println("Error DB: " + e);
         } finally {
             try {
@@ -112,7 +99,6 @@ public class RepositoryConcert implements ICrudRepositoryConcert<Integer, Concer
                 e.printStackTrace();
             }
         }
-        logger.traceExit(all);
         return all;
     }
 

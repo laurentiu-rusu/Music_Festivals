@@ -1,21 +1,16 @@
 package persistance;
 
 import utils.JDBUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class RepositoryUser implements ICrudRepositoryUser<String> {
-    private static final Logger logger = LogManager.getLogger();
-
     public RepositoryUser() {}
 
     @Override
     public boolean SearchForUser(String username, String password) {
-        logger.traceEntry("Search user after username and password.");
         if (username != null  && password != null ) {
             try {
                 PreparedStatement ps;
@@ -26,16 +21,13 @@ public class RepositoryUser implements ICrudRepositoryUser<String> {
                 ps.execute();
                 ResultSet rs = ps.getResultSet();
                 while(rs.next()) {
-                    logger.traceExit("User found!");
                     return true;
                 }
             } catch (SQLException e) {
-                logger.error(e);
                 System.out.println("Error DB " + e);
                 e.printStackTrace();
             }
         }
-        logger.traceExit("User not found!");
         return false;
     }
 }

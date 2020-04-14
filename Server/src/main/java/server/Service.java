@@ -10,6 +10,7 @@ import persistance.ICrudRepositoryUser;
 import persistance.PersistanceException;
 import service.IService;
 
+import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -19,10 +20,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Service implements IService {
     ICrudRepositoryConcert repositoryConcert;
     ICrudRepositoryTicket repositoryTicket;
-    ICrudRepositoryUser repositoryUser;
+    ICrudRepositoryUser<String> repositoryUser;
     private Map<String, applicationObserver> loggedClients;
 
-    public Service(ICrudRepositoryConcert repositoryConcert, ICrudRepositoryTicket repositoryTicket, ICrudRepositoryUser repositoryUser) {
+    public Service(ICrudRepositoryConcert repositoryConcert, ICrudRepositoryTicket repositoryTicket, ICrudRepositoryUser<String> repositoryUser) {
         this.repositoryConcert = repositoryConcert;
         this.repositoryTicket = repositoryTicket;
         this.repositoryUser = repositoryUser;
@@ -34,7 +35,12 @@ public class Service implements IService {
         Concert concert = new Concert(id, name, date, time, place, takenSeats, emptySeats);
         repositoryConcert.update(concert.getId(), concert);
         for(applicationObserver observer:loggedClients.values())
-            observer.updateTrips(findAll());
+            try {
+                observer.updateTrips(findAll());
+            }
+            catch (RemoteException exc){
+                System.out.println("Error sending update " + exc);
+            }
     }
 
     @Override
@@ -56,13 +62,14 @@ public class Service implements IService {
 
     @Override
     public synchronized void login(User user, applicationObserver applicationObserver) throws PersistanceException {
+        System.out.println("user");
         if (!repositoryUser.SearchForUser(user.getUsername(), user.getPassword())) {
-            throw new PersistanceException("Incorect username or password");
+            throw new PersistanceException("Incorrect username or password");
         }
         loggedClients.put(user.getUsername(), applicationObserver);
     }
 
-    public synchronized void logout(String usename) throws PersistanceException {
-            loggedClients.remove(usename);
+    public synchronized void logout(String username) throws PersistanceException {
+            loggedClients.remove(username);
     }
 }

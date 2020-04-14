@@ -17,12 +17,15 @@ import persistance.PersistanceException;
 import service.IService;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ControllerMainApp implements applicationObserver {
+public class ControllerMainApp extends UnicastRemoteObject implements applicationObserver, Serializable {
     private ObservableList<Concert> modelGrade = FXCollections.observableArrayList();
     private ObservableList<Concert> artists = FXCollections.observableArrayList();
     IService service;
@@ -63,6 +66,10 @@ public class ControllerMainApp implements applicationObserver {
     @FXML
     DatePicker calendar;
 
+    public ControllerMainApp() throws RemoteException {
+
+    }
+
     private ControllerLogin loginController;
 
     public void set(Stage mainStage, IService service, ControllerLogin loginController) throws PersistanceException {
@@ -90,15 +97,6 @@ public class ControllerMainApp implements applicationObserver {
             }
         });
     }
-
-//    public void setService(Stage mainStage, ServiceConcert serviceConcert, ServiceTicket serviceTicket, ServiceUser serviceUser) {
-//        this.mainStage = mainStage;
-//        this.serviceConcert = serviceConcert;
-//        this.serviceTicket = serviceTicket;
-//        this.serviceUser = serviceUser;
-//        calendar.setValue(LocalDate.now());
-//        modelGrade.setAll(serviceConcert.findAll());
-//    }
 
     public void tableSelection() {
         showsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Concert>() {
@@ -191,13 +189,12 @@ public class ControllerMainApp implements applicationObserver {
         ControllerLogin ctrl = loader.getController();
         Scene scene = new Scene(root);
         Stage stage = new Stage();
-        ctrl.setService(stage, mainStage,service,this);
+//        ctrl.setAppService(service, this);
+        ctrl.setAppService(stage, mainStage,service,this);
         stage.setScene(scene);
         stage.setTitle("Login");
         stage.show();
     }
-
-
 
     public void setTable() throws PersistanceException {
         List<Concert> list = service.findAll();
